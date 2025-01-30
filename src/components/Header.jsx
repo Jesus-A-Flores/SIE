@@ -23,7 +23,7 @@ const Header = () => {
         <Link to="/" className="">
           <img src="elekid.gif" alt="Logo" />
         </Link>
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand fw-bold fs-2 fst-italic" to="/">
           ElecSys
         </Link>
         <button

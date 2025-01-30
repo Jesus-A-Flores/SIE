@@ -32,7 +32,7 @@ const AdvancedPayments = () => {
 
   return (
     <div>
-      <h2>Gestión de Adelantos de Sueldo</h2>
+      <h2 style={{ color: "var(--primary)" }}>Gestión de Adelantos de Sueldo</h2>
       <form onSubmit={addPayment} className="mb-4">
         <div className="row">
           <div className="col-md-3 mb-3">

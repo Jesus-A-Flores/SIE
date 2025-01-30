@@ -73,7 +73,7 @@ const ToolTracking = () => {
 
   return (
     <div>
-      <h2>Seguimiento de Herramientas</h2>
+      <h2 style={{ color: "var(--primary)" }}>Seguimiento de Herramientas</h2>
       <form onSubmit={addTool} className="mb-4">
         <div className="row">
           <div className="col-md-2 mb-3">

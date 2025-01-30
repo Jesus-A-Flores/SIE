@@ -77,7 +77,7 @@ const ExpenseTracking = () => {
 
   return (
     <div>
-      <h2>Seguimiento de Gastos</h2>
+      <h2 style={{ color: "var(--primary)" }}>Seguimiento de Gastos</h2>
       <form onSubmit={addExpense} className="mb-4">
         <div className="row">
           <div className="col-md-2 mb-3">

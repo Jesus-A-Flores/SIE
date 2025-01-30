@@ -73,7 +73,7 @@ const Empleados = () => {
 
   return (
     <div>
-      <h2>Gestión de Empleados</h2>
+      <h2 style={{ color: "var(--primary)" }}>Gestión de Empleados</h2>
       <form onSubmit={addEmployee} className="mb-4">
         <div className="row">
           <div className="col-md-2 mb-3">

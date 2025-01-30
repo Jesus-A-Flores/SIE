@@ -39,7 +39,7 @@ const Inventario = () => {
 
   return (
     <div>
-      <h2>Gestión de Inventario</h2>
+      <h2 style={{ color: "var(--primary)" }}>Gestión de Inventario</h2>
       <form onSubmit={addItem} className="mb-4">
         <div className="form-row">
           <div className="col-md-3 mb-3">
