@@ -19,6 +19,10 @@ const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container">
+        {/*Agregar imagen*/}
+        <Link to="/" className="">
+          <img src="elekid.gif" alt="Logo" />
+        </Link>
         <Link className="navbar-brand" to="/">
           ElecSys
         </Link>

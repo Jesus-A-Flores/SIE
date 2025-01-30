@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { collection, getDocs, addDoc, doc, updateDoc } from "firebase/firestore"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { db, auth } from "../firebaseConfig/firebase"
+import { showSuccessAlert, showErrorAlert } from "../utils/swalUtils"
 
 const Administrativos = () => {
   const [users, setUsers] = useState([])
@@ -9,8 +10,12 @@ const Administrativos = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const querySnapshot = await getDocs(collection(db, "usuarios"))
-      setUsers(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+      try {
+        const querySnapshot = await getDocs(collection(db, "users"))
+        setUsers(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+      } catch (error) {
+        showErrorAlert("Error", `No se pudieron cargar los usuarios: ${error.message}`)
+      }
     }
     fetchUsers()
   }, [])
@@ -22,28 +27,44 @@ const Administrativos = () => {
   const addUser = async (e) => {
     e.preventDefault()
     try {
+      // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password)
-      await addDoc(collection(db, "usuarios"), {
+
+      // Add user to Firestore
+      const userDocRef = await addDoc(collection(db, "users"), {
         uid: userCredential.user.uid,
         email: newUser.email,
         role: newUser.role,
       })
+
+      showSuccessAlert("Éxito", "Usuario agregado correctamente")
       setNewUser({ email: "", password: "", role: "worker" })
-      const querySnapshot = await getDocs(collection(db, "usuarios"))
-      setUsers(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+
+      // Update local state
+      setUsers([
+        ...users,
+        { id: userDocRef.id, uid: userCredential.user.uid, email: newUser.email, role: newUser.role },
+      ])
     } catch (error) {
-      console.error("Error al crear usuario:", error)
+      showErrorAlert("Error", `No se pudo crear el usuario: ${error.message}`)
     }
   }
 
   const updateUserRole = async (id, newRole) => {
-    await updateDoc(doc(db, "usuarios", id), { role: newRole })
-    setUsers(users.map((user) => (user.id === id ? { ...user, role: newRole } : user)))
+    try {
+      await updateDoc(doc(db, "users", id), { role: newRole })
+      setUsers(users.map((user) => (user.id === id ? { ...user, role: newRole } : user)))
+      showSuccessAlert("Éxito", "Rol de usuario actualizado correctamente")
+    } catch (error) {
+      showErrorAlert("Error", `No se pudo actualizar el rol del usuario: ${error.message}`)
+    }
   }
 
   return (
     <div>
-      <h2>Gestión de Usuarios</h2>
+      <h2 className="mb-4" style={{ color: "var(--primary)" }}>
+        Gestión de Usuarios
+      </h2>
       <form onSubmit={addUser} className="mb-4">
         <div className="row">
           <div className="col-md-3 mb-3">
@@ -85,7 +106,7 @@ const Administrativos = () => {
         </div>
       </form>
       <table className="table">
-        <thead>
+        <thead className="thead-dark">
           <tr>
             <th>Email</th>
             <th>Rol</th>

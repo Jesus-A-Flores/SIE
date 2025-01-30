@@ -9,13 +9,13 @@ const Reportes = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const employeesSnapshot = await getDocs(collection(db, "empleados"))
+      const employeesSnapshot = await getDocs(collection(db, "employees"))
       setEmployees(employeesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
 
-      const projectsSnapshot = await getDocs(collection(db, "proyectos"))
+      const projectsSnapshot = await getDocs(collection(db, "projects"))
       setProjects(projectsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
 
-      const inventorySnapshot = await getDocs(collection(db, "inventario"))
+      const inventorySnapshot = await getDocs(collection(db, "inventory"))
       setInventory(inventorySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     }
     fetchData()

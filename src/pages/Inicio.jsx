@@ -15,7 +15,7 @@ const Inicio = () => {
           </Link>
         </div>
         <div className="col-md-3 mb-3">
-          <Link to="/projectos" className="btn btn-secondary btn-lg btn-block w-100">
+          <Link to="/proyectos" className="btn btn-secondary btn-lg btn-block w-100">
             Proyectos
           </Link>
         </div>

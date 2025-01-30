@@ -12,15 +12,18 @@ const Proyectos = () => {
     status: "En progreso",
     type: "Instalación eléctrica domiciliaria",
     assignedEmployees: [],
+    startDate: "",
+    endDate: "",
+    budget: "",
   })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const projectsSnapshot = await getDocs(collection(db, "proyectos"))
+        const projectsSnapshot = await getDocs(collection(db, "projects"))
         setProjects(projectsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
 
-        const employeesSnapshot = await getDocs(collection(db, "empleados"))
+        const employeesSnapshot = await getDocs(collection(db, "employees"))
         setEmployees(employeesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
       } catch (error) {
         showErrorAlert("Error", `No se pudieron cargar los datos: ${error.message}`)
@@ -41,7 +44,7 @@ const Proyectos = () => {
   const addProject = async (e) => {
     e.preventDefault()
     try {
-      await addDoc(collection(db, "proyectos"), newProject)
+      await addDoc(collection(db, "projects"), newProject)
       showSuccessAlert("Éxito", "Proyecto agregado correctamente")
       setNewProject({
         name: "",
@@ -49,8 +52,11 @@ const Proyectos = () => {
         status: "En progreso",
         type: "Instalación eléctrica domiciliaria",
         assignedEmployees: [],
+        startDate: "",
+        endDate: "",
+        budget: "",
       })
-      const querySnapshot = await getDocs(collection(db, "proyectos"))
+      const querySnapshot = await getDocs(collection(db, "projects"))
       setProjects(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
       showErrorAlert("Error", `No se pudo agregar el proyecto: ${error.message}`)
@@ -61,7 +67,7 @@ const Proyectos = () => {
     const result = await showConfirmDialog("¿Estás seguro?", "No podrás revertir esto!", "Sí, eliminar")
     if (result.isConfirmed) {
       try {
-        await deleteDoc(doc(db, "proyectos", id))
+        await deleteDoc(doc(db, "projects", id))
         showSuccessAlert("Eliminado", "El proyecto ha sido eliminado")
         setProjects(projects.filter((project) => project.id !== id))
       } catch (error) {
@@ -72,7 +78,7 @@ const Proyectos = () => {
 
   const updateProject = async (id, field, value) => {
     try {
-      await updateDoc(doc(db, "proyectos", id), { [field]: value })
+      await updateDoc(doc(db, "projects", id), { [field]: value })
       showSuccessAlert("Actualizado", "Proyecto actualizado correctamente")
       setProjects(projects.map((project) => (project.id === id ? { ...project, [field]: value } : project)))
     } catch (error) {
@@ -82,7 +88,9 @@ const Proyectos = () => {
 
   return (
     <div>
-      <h2>Gestión de Proyectos</h2>
+      <h2 className="mb-4" style={{ color: "var(--primary)" }}>
+        Gestión de Proyectos
+      </h2>
       <form onSubmit={addProject} className="mb-4">
         <div className="row">
           <div className="col-md-2 mb-3">
@@ -141,6 +149,37 @@ const Proyectos = () => {
             </select>
           </div>
           <div className="col-md-2 mb-3">
+            <input
+              type="date"
+              className="form-control"
+              name="startDate"
+              value={newProject.startDate}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-2 mb-3">
+            <input
+              type="date"
+              className="form-control"
+              name="endDate"
+              value={newProject.endDate}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-2 mb-3">
+            <input
+              type="number"
+              className="form-control"
+              name="budget"
+              placeholder="Presupuesto"
+              value={newProject.budget}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-2 mb-3">
             <button type="submit" className="btn btn-primary">
               Agregar Proyecto
             </button>
@@ -148,13 +187,16 @@ const Proyectos = () => {
         </div>
       </form>
       <table className="table">
-        <thead>
+        <thead className="thead-dark">
           <tr>
             <th>Nombre del Proyecto</th>
             <th>Cliente</th>
             <th>Estado</th>
             <th>Tipo</th>
             <th>Empleados Asignados</th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Fin</th>
+            <th>Presupuesto</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -176,8 +218,14 @@ const Proyectos = () => {
               </td>
               <td>{project.type}</td>
               <td>
-                {project.assignedEmployees.map((empId) => employees.find((emp) => emp.id === empId)?.name).join(", ")}
+                {project.assignedEmployees
+                  .map((empId) => employees.find((emp) => emp.id === empId)?.name)
+                  .filter(Boolean)
+                  .join(", ")}
               </td>
+              <td>{project.startDate}</td>
+              <td>{project.endDate}</td>
+              <td>{project.budget}</td>
               <td>
                 <button className="btn btn-danger btn-sm" onClick={() => deleteProject(project.id)}>
                   Eliminar

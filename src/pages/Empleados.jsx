@@ -16,10 +16,10 @@ const Empleados = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "empleados"))
+        const querySnapshot = await getDocs(collection(db, "employees"))
         setEmployees(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
       } catch (error) {
-        showErrorAlert("Error", `No se pudieron cargar los empleados: ${error.message}`)
+        showErrorAlert("Error", `No se pudieron cargar los employees: ${error.message}`)
       }
     }
     fetchEmployees()
@@ -32,7 +32,7 @@ const Empleados = () => {
   const addEmployee = async (e) => {
     e.preventDefault()
     try {
-      await addDoc(collection(db, "empleados"), newEmployee)
+      await addDoc(collection(db, "employees"), newEmployee)
       showSuccessAlert("Éxito", "Empleado agregado correctamente")
       setNewEmployee({
         name: "",
@@ -41,7 +41,7 @@ const Empleados = () => {
         type: "permanent",
         transportSubsidy: "5",
       })
-      const querySnapshot = await getDocs(collection(db, "empleados"))
+      const querySnapshot = await getDocs(collection(db, "employees"))
       setEmployees(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
       showErrorAlert("Error", `No se pudo agregar el empleado: ${error.message}`)
@@ -52,7 +52,7 @@ const Empleados = () => {
     const result = await showConfirmDialog("¿Estás seguro?", "No podrás revertir esto!", "Sí, eliminar")
     if (result.isConfirmed) {
       try {
-        await deleteDoc(doc(db, "empleados", id))
+        await deleteDoc(doc(db, "employees", id))
         showSuccessAlert("Eliminado", "El empleado ha sido eliminado")
         setEmployees(employees.filter((employee) => employee.id !== id))
       } catch (error) {
@@ -63,7 +63,7 @@ const Empleados = () => {
 
   const updateEmployee = async (id, field, value) => {
     try {
-      await updateDoc(doc(db, "empleados", id), { [field]: value })
+      await updateDoc(doc(db, "employees", id), { [field]: value })
       showSuccessAlert("Actualizado", "Empleado actualizado correctamente")
       setEmployees(employees.map((employee) => (employee.id === id ? { ...employee, [field]: value } : employee)))
     } catch (error) {
