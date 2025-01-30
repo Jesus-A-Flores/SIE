@@ -1,0 +1,53 @@
+@import "bootstrap/scss/bootstrap";
+
+:root {
+  --primary: #ff6f00;
+  --secondary: #f5f5f5;
+  --accent: #0d47a1;
+  --highlight: #c6ff00;
+}
+
+body {
+  background-color: var(--secondary);
+  color: #333;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  &:hover {
+    background-color: darken(#ff6f00, 10%);
+    border-color: darken(#ff6f00, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  &:hover {
+    background-color: darken(#0d47a1, 10%);
+    border-color: darken(#0d47a1, 10%);
+  }
+}
+
+.navbar {
+  background-color: var(--primary) !important;
+  .navbar-brand, .nav-link {
+    color: var(--secondary) !important;
+    &:hover {
+      color: var(--highlight) !important;
+    }
+  }
+}
+
+.table {
+  thead {
+    background-color: var(--accent);
+    color: var(--secondary);
+  }
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(13, 71, 161, 0.25);
+}
